@@ -22,7 +22,7 @@ class HomePage extends GetView<WidgetsController> {
       } else if(controller.navBarIndex.value == 3) {
         return const InboxScreen();
       }else {
-        return const AccountScreen();
+        return  AccountScreen();
       }
     });
   }

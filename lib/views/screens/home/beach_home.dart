@@ -5,21 +5,20 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../../utils/constants/app_keys.dart';
 import 'booking_screen.dart';
 
 class BeachHome extends StatelessWidget {
-  const BeachHome({super.key});
-
+  const BeachHome({super.key, required this.dataofHotel, required this.reviews}
+      //
+      );
+  final Map<String, dynamic>? dataofHotel;
+  final List<Map<String, dynamic>>? reviews;
   @override
   Widget build(BuildContext context) {
+    //int no_review=dataofHotel!['Review'].;
     final PageController pageController = PageController();
-    List<String> beachList = [
-      AppKeys.kBeach1,
-      AppKeys.kBeach2,
-      AppKeys.kBeach3,
-    ];
+    List beachList = [dataofHotel?['Hotel Image']];
+    int noReview = reviews?.length  ?? 0 ;
     return Scaffold(
       appBar: AppBar(
         leading: const CustomBackButton(),
@@ -85,7 +84,7 @@ class BeachHome extends StatelessWidget {
               pageSnapping: true,
               onPageChanged: (index) {},
               itemBuilder: (context, pagePosition) {
-                return Image.asset(
+                return Image.network(
                   beachList[pagePosition],
                   fit: BoxFit.fill,
                 );
@@ -98,14 +97,15 @@ class BeachHome extends StatelessWidget {
             child: SmoothPageIndicator(
               controller: pageController,
               count: 3,
-              effect: const ExpandingDotsEffect(activeDotColor: Color(0xFF2196F3)),
+              effect:
+                  const ExpandingDotsEffect(activeDotColor: Color(0xFF2196F3)),
               onDotClicked: (index) {},
             ),
           ),
           SizedBox(height: 1.h),
-          const Text(
-            'Luxurious room With Wifi \nAir conditioning',
-            style: TextStyle(
+          Text(
+            dataofHotel!['Hotel Long Description'].toString(),
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 20,
               fontFamily: 'Open Sans',
@@ -113,9 +113,9 @@ class BeachHome extends StatelessWidget {
             ),
           ),
           SizedBox(height: 1.h),
-          const Text(
-            "Krabi, the capital of southern Thailand's Krabi Province.'",
-            style: TextStyle(
+          Text(
+            dataofHotel!['Hotel Short Description'].toString(),
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 12,
               fontFamily: 'Raleway',
@@ -144,14 +144,13 @@ class BeachHome extends StatelessWidget {
               children: [
                 Container(
                   width: 60.w,
-                  child: const SizedBox(
+                  child: SizedBox(
                     width: 207,
                     child: Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
-                            text:
-                                "Exclusivity reigns supreme at the five-star Rayavadee, a boutique hotel framed by sheer limestone cliffs and bordered by three of Krabi's most beautiful white-sand beaches.\n\n\n\n",
+                            text: dataofHotel?['Details'],
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 12,
@@ -176,7 +175,7 @@ class BeachHome extends StatelessWidget {
                 ),
                 Container(
                   width: 20.w,
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -184,7 +183,7 @@ class BeachHome extends StatelessWidget {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text: '321\n',
+                              text: noReview.toString(),
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 20,
@@ -294,16 +293,22 @@ class BeachHome extends StatelessWidget {
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FacilityWidget(text: "Ocean View", icon: Icons.pool_outlined),
-                    FacilityWidget(text: "Family Room", icon: Icons.family_restroom_outlined),
+                    FacilityWidget(
+                        text: "Ocean View", icon: Icons.pool_outlined),
+                    FacilityWidget(
+                        text: "Family Room",
+                        icon: Icons.family_restroom_outlined),
                   ],
                 ),
                 SizedBox(height: 2.h),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FacilityWidget(text: "Non-Smoker Room", icon: Icons.smoke_free_outlined),
-                    FacilityWidget(text: "Bridal Suite", icon: Icons.hotel_outlined),
+                    FacilityWidget(
+                        text: "Non-Smoker Room",
+                        icon: Icons.smoke_free_outlined),
+                    FacilityWidget(
+                        text: "Bridal Suite", icon: Icons.hotel_outlined),
                   ],
                 ),
                 SizedBox(height: 1.h),
@@ -344,15 +349,19 @@ class BeachHome extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FacilityWidget(text: "Free Wifi", icon: Icons.wifi),
-                    FacilityWidget(text: "Free Parking", icon: Icons.garage_outlined),
+                    FacilityWidget(
+                        text: "Free Parking", icon: Icons.garage_outlined),
                   ],
                 ),
                 SizedBox(height: 2.h),
                 const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    FacilityWidget(text: "Air-Conditioning ", icon: Icons.air_outlined),
-                    FacilityWidget(text: "Daily HouseKeeping", icon: Icons.cleaning_services),
+                    FacilityWidget(
+                        text: "Air-Conditioning ", icon: Icons.air_outlined),
+                    FacilityWidget(
+                        text: "Daily HouseKeeping",
+                        icon: Icons.cleaning_services),
                   ],
                 ),
                 SizedBox(height: 1.h),
@@ -439,7 +448,7 @@ class BeachHome extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: 5,
+                    itemCount: noReview,
                     itemBuilder: (context, index) {
                       return SizedBox(
                         width: 80.w,
@@ -568,7 +577,7 @@ class BeachHome extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text.rich(
+                    Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
@@ -581,7 +590,7 @@ class BeachHome extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: '₹2,876',
+                            text: '₹' + dataofHotel?['Price'],
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -611,8 +620,8 @@ class BeachHome extends StatelessWidget {
                         alignment: Alignment.center,
                         decoration: ShapeDecoration(
                           color: const Color(0xFF2196F3),
-                          shape:
-                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
                           shadows: [
                             const BoxShadow(
                               color: Color(0x26000000),

@@ -1,8 +1,9 @@
+import 'dart:ffi';
+
 import 'package:bula/controllers/home_controller.dart';
 import 'package:bula/utils/constants/app_keys.dart';
 import 'package:bula/views/screens/home/beach_home.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -18,7 +19,7 @@ import '../../widgets/home/property_widget.dart';
 class HomeRoomScreen extends GetView<HomeController> {
   HomeRoomScreen({super.key});
   final databaseReference =
-      FirebaseDatabase.instance.ref().child('Admin').child('Hotels');
+      FirebaseDatabase.instance.ref().child('Admin/Hotels');
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class HomeRoomScreen extends GetView<HomeController> {
       child: Scaffold(
         body: Stack(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             ListView(
@@ -68,53 +69,43 @@ class HomeRoomScreen extends GetView<HomeController> {
 
             Obx(() {
               if (controller.homeView.value == "hotel&resort") {
-                // return Column(
-                //   children: [
-                //     InkWell(
-                //       onTap:()=>Get.to(()=>const BeachHome()),
-                //       child: const PropertyWidget(
-                //         imagesList: [
-                //         AppKeys.kBed1,
-                //         AppKeys.kBed2,
-                //         AppKeys.kBed3,
-
-                //       ], title: "Karabi"),
-                //     ),
-                //     SizedBox(height: 2.h),
-                //     const PropertyWidget(imagesList: [
-                //       AppKeys.kBed3,
-                //       AppKeys.kBed1,
-                //       AppKeys.kBed2,
-                //     ], title: "Karabi"),
-                //   ],
-                // );
-
                 return Column(
                   //mainAxisAlignment: MainAxisAlignment.start,
                   //crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 130,
                     ),
                     Expanded(
                       child: StreamBuilder(
                           stream: databaseReference.onValue,
-                          builder:
-                              (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+                          builder: (context, AsyncSnapshot snapshot) {
                             if (!snapshot.hasData) {
-                              return Center(child: CircularProgressIndicator());
+                              return const Center(
+                                  child: CircularProgressIndicator());
                             } else {
+                              Map data = snapshot.data!.snapshot.value;
+                              List<Map<String, dynamic>> item = [];
+                              data.forEach((index, data) =>
+                                  item.add({"key": index, ...data}));
                               return ListView.builder(
                                 itemCount:
                                     snapshot.data!.snapshot.children.length,
                                 itemBuilder: (context, index) {
-                                  return PropertyWidget(
-                                    imagesList: [
-                                      AppKeys.kBed3,
-                                      AppKeys.kBed1,
-                                      AppKeys.kBed2,
-                                    ],
-                                    title: snapshot.data!.snapshot.toString(),
+                                  return InkWell(
+                                    onTap: () => Get.to(() => BeachHome(
+                                          dataofHotel: item[index], 
+                                          reviews: item[index]['Review'],
+                                        ),
+                                        ),
+                                    child: PropertyWidget(
+                                      imagesList: [
+                                        item[index]['Hotel Image'],
+                                      ],
+                                      title: item[index]['key'],
+                                      tagline: item[index]['Tagline'],
+                                      price: item[index]['Price'],
+                                    ),
                                   );
                                 },
                               );
@@ -126,23 +117,33 @@ class HomeRoomScreen extends GetView<HomeController> {
               } else {
                 return Column(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 130,
                     ),
-                    InkWell(
-                      onTap: () => Get.to(() => const BeachHome()),
-                      child: const PropertyWidget(imagesList: [
-                        AppKeys.kBeach1,
-                        AppKeys.kBeach2,
-                        AppKeys.kBeach3,
-                      ], title: "Karabi"),
+                    const InkWell(
+                      // onTap: () => Get.to(() =>  BeachHome(data: )),
+                      child: PropertyWidget(
+                        imagesList: [
+                          AppKeys.kBeach1,
+                          AppKeys.kBeach2,
+                          AppKeys.kBeach3,
+                        ],
+                        title: "Karabi",
+                        tagline: '',
+                        price: '',
+                      ),
                     ),
                     SizedBox(height: 2.h),
-                    const PropertyWidget(imagesList: [
-                      AppKeys.kBeach3,
-                      AppKeys.kBeach2,
-                      AppKeys.kBed1,
-                    ], title: "Karabi"),
+                    const PropertyWidget(
+                      imagesList: [
+                        AppKeys.kBeach3,
+                        AppKeys.kBeach2,
+                        AppKeys.kBed1,
+                      ],
+                      title: "Karabi",
+                      tagline: '',
+                      price: '',
+                    ),
                   ],
                 );
               }

@@ -7,13 +7,19 @@ import 'package:bula/views/screens/account/privacy_policy_screen.dart';
 import 'package:bula/views/screens/account/terms_and_conditions_screen.dart';
 import 'package:bula/views/widgets/account/about_button.dart';
 import 'package:bula/views/widgets/home/bottom_nav_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({super.key});
+  AccountScreen({super.key});
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  SignOut() async {
+    await _auth.signOut();  
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +94,8 @@ class AccountScreen extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: ShapeDecoration(
                     color: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
                     shadows: const [
                       BoxShadow(
                         color: Color(0xFFEFF1F3),
@@ -125,7 +132,8 @@ class AccountScreen extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: ShapeDecoration(
                   color: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)),
                   shadows: const [
                     BoxShadow(
                       color: Color(0xFFEFF1F3),
@@ -202,44 +210,55 @@ class AccountScreen extends StatelessWidget {
                       Get.to(() => const CustomSupportScreen());
                     }),
                 SizedBox(height: 7.h),
-                SizedBox(
-                  height: 6.h,
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 10.w,
-                        height: 6.h,
-                        color: Theme.of(context).primaryColor.withOpacity(0.5),
-                      ),
-                      SizedBox(width: 5.w),
-                      const Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Log out",
-                            style: TextStyle(
-                              color: Color(0xFF1A2A34),
-                              fontSize: 16,
-                              fontFamily: 'Open Sans',
-                              fontWeight: FontWeight.w700,
+
+                ///log out
+                GestureDetector(
+                  onTap: () {
+                    SignOut();
+                  },
+                  child: SizedBox(
+                    height: 6.h,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 10.w,
+                          height: 6.h,
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.5),
+                        ),
+                        SizedBox(width: 5.w),
+                        const Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Log out",
+                              style: TextStyle(
+                                color: Color(0xFF1A2A34),
+                                fontSize: 16,
+                                fontFamily: 'Open Sans',
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
-                          ),
-                          Text(
-                            "you are logged in as Sayan Dutta",
-                            style: TextStyle(
-                              color: Color(0xFF060C11),
-                              fontSize: 12,
-                              fontFamily: 'Open Sans',
-                              fontWeight: FontWeight.w400,
+                            Text(
+                              "you are logged in as Sayan Dutta",
+                              style: TextStyle(
+                                color: Color(0xFF060C11),
+                                fontSize: 12,
+                                fontFamily: 'Open Sans',
+                                fontWeight: FontWeight.w400,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    ],
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 ),
+
                 SizedBox(height: 4.h),
+
+                /// logout from all device
                 SizedBox(
                   height: 7.h,
                   child: Row(
@@ -247,7 +266,10 @@ class AccountScreen extends StatelessWidget {
                       Container(
                         width: 10.w,
                         height: 6.h,
-                        color: Theme.of(context).colorScheme.error.withOpacity(0.5),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .error
+                            .withOpacity(0.5),
                       ),
                       SizedBox(width: 5.w),
                       const Column(

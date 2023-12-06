@@ -82,13 +82,13 @@ class BookingScreen extends StatelessWidget {
                 AppKeys.kBed1,
                 AppKeys.kBed2,
                 AppKeys.kBed3,
-              ], title: "Karabi")
+              ], title: "Karabi", tagline: '', price: '',)
             else
               const PropertyWidget(imagesList: [
                 AppKeys.kBeach1,
                 AppKeys.kBeach2,
                 AppKeys.kBeach3,
-              ], title: "Karabi"),
+              ], title: "Karabi", tagline: '', price: '',),
             const Expanded(child: SizedBox()),
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
